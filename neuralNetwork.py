@@ -18,6 +18,7 @@ class NeuralNetwork:
     def training(self):
         self._initialize_params()
         self._forward()
+        self._back_propagation(d = True)
 
     def _initialize_params(self):
         L = len(self.layers_dim)
@@ -31,6 +32,12 @@ class NeuralNetwork:
             return 4/(np.exp(x)+np.exp(-x))**2
         else:
             return (np.exp(x)-np.exp(-x))/(np.exp(x)+np.exp(-x))
+
+    def _mse(self, y, y_hat, d = False):
+        if d:
+            return y_hat-y
+        else:
+            return np.mean((y_hat - y)**2)
 
     def _forward(self):
         self.params['A0'] = self.train_data.x_train
