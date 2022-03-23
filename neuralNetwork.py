@@ -1,4 +1,3 @@
-from turtle import forward
 from dataset import Dataset
 import numpy as np
 
@@ -15,11 +14,22 @@ class NeuralNetwork:
         self.train_data = train_data
         self.layers_dim = layers_dim
 
-    def training(self):
+    def training(self, alpha, epochs):
+        self.alpha = alpha
+        self.epochs = epochs
         self._initialize_params()
-        self._forward()
-        self._back_propagation(d = True)
-        self._weight_adjust()
+
+        i=0
+        while i <= self.epochs:
+            self._forward(self.train_data.x_train)
+            self._back_propagation(d = True)
+            self._weight_adjust()
+            self.errors.append(self._mse(self.train_data.y_train, self.params['A2']))
+            i += 1
+
+    def validate(self):
+        self._forward(self.train_data.x_test)
+        return self.params['A2']
 
     def _initialize_params(self):
         L = len(self.layers_dim)
@@ -40,8 +50,8 @@ class NeuralNetwork:
         else:
             return np.mean((y_hat - y)**2)
 
-    def _forward(self):
-        self.params['A0'] = self.train_data.x_train
+    def _forward(self, x_data):
+        self.params['A0'] = x_data
 
         self.params['Z1'] = (self.params['A0']@self.params['W1']) + self.params['b1'] 
         self.params['A1'] = self._tanh(self.params['Z1']) 
