@@ -86,16 +86,17 @@ class NeuralNetwork:
 
     ######################################## ONLINE TRAINING (EACH ITER) ###################################################
     def _ForwardON(self, x_data):
-        Z1,A1,Z2,A2 = []
         A0 = x_data
         L = len(self.params['A0'])
+        Z1, Z2, A1, A2= [], [], [], []
 
         for l in range(0, L-1):
-            Z1[l] = (A0[l]@self.params['W1']) + self.params['b1']
-            A1[l] = self._tanh(Z1[l])
-
-            Z2[l] = (A1[l]@self.params['W2']) + self.params['b1']
-            A2[l] = self._tanh(Z2[l])
+            print(A0[l])
+            Z1.append((A0[l]@self.params['W1']) + self.params['b1'])
+            A1.append(self._tanh(Z1[l]))
+            print(A1[l])
+            Z2.append((A1[l]@self.params['W2']) + self.params['b1'])
+            A2.append(self._tanh(Z2[l]))
 
             self._BackPropagationON(l, A1[l], A2[l], d = True)
         
