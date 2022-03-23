@@ -47,3 +47,10 @@ class NeuralNetwork:
 
         self.params['Z2'] = (self.params['A1']@self.params['W2']) + self.params['b2'] 
         self.params['A2'] = self._tanh(self.params['Z2']) 
+
+    def _back_propagation(self, d):
+            self.params['dZ2'] = self._mse(self.train_data.y_train, self.params['A2'], d) * self._tanh(self.params['A2'], d)
+            self.params['dW2'] = self.params['A1'].T@self.params['dZ2']
+
+            self.params['dZ1'] = self.params['dZ2']@self.params['W2'].T * self._tanh(self.params['A1'], d)
+            self.params['dW1'] = self.params['A0'].T@self.params['dZ1']
