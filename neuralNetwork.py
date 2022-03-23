@@ -19,6 +19,7 @@ class NeuralNetwork:
         self._initialize_params()
         self._forward()
         self._back_propagation(d = True)
+        self._weight_adjust()
 
     def _initialize_params(self):
         L = len(self.layers_dim)
@@ -54,3 +55,10 @@ class NeuralNetwork:
 
             self.params['dZ1'] = self.params['dZ2']@self.params['W2'].T * self._tanh(self.params['A1'], d)
             self.params['dW1'] = self.params['A0'].T@self.params['dZ1']
+
+    def _weight_adjust(self):
+        self.params['W2'] = self.params['W2'] - self.params['dW2'] * self.alpha
+        self.params['b2'] = self.params['b2'] - (np.mean(self.params['dZ2'], axis=0, keepdims=True)) * self.alpha
+
+        self.params['W1'] = self.params['W1'] - self.params['dW1'] * self.alpha
+        self.params['b1'] = self.params['b1'] - (np.mean(self.params['dZ1'], axis=0, keepdims=True)) * self.alpha
