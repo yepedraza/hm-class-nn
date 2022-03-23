@@ -91,14 +91,17 @@ class NeuralNetwork:
         Z1, Z2, A1, A2= [], [], [], []
 
         for l in range(0, L-1):
-            print(A0[l])
+            #print(A0[l])
+            #print(A0[0,l+1])
             Z1.append((A0[l]@self.params['W1']) + self.params['b1'])
             A1.append(self._tanh(Z1[l]))
-            print(A1[l])
             Z2.append((A1[l]@self.params['W2']) + self.params['b1'])
             A2.append(self._tanh(Z2[l]))
+            print(A2[l])
+            print(A2[0:l])
+            
 
-            self._BackPropagationON(l, A1[l], A2[l], d = True)
+            self._BackPropagationON(l, A1[0,l], A2[0,l], d = True)
         
         return A2
 
@@ -107,10 +110,10 @@ class NeuralNetwork:
         Y = self.train_data.y_train
 
         dZ2 = self._mse(Y[l], A2, d) * self._tanh(A2,d)
-        dW2 = A1@dZ2[l]
+        dW2 = A1.T@dZ2
 
         dZ1= dZ2@self.params['W2'] * self._tanh(A1,d)
-        dW1 = A1@dZ2[l]
+        dW1 = A1.T@dZ2
 
         self._WeightAdjustON(dZ1,dZ2,dW1,dW2)
 
